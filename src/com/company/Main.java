@@ -4,53 +4,73 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-
     public static void main(String[] args) {
-
-        Random random = new Random();
         Scanner in = new Scanner(System.in);
-        String trash = "";
-        boolean isRunning = true;
-        int points = 0;
-        System.out.println("Welcome to Craps! Press 1 to play or press -1 to end the game.");
-        int input = 0;
+        String playAgain;
+        int sumOfDice;
+        int point;
 
-        do {
-            int roll1 = random.nextInt(6) + 1;
-            int roll2 = random.nextInt(6) + 1;
-            System.out.println("Press 1 to roll.");
-            input = in.nextInt();
+        do
+        {
+            sumOfDice = crapsRoll();
 
-            if (input == -1) {
-                System.out.println("Ending game!");
-                isRunning = false;
+            if (sumOfDice == 7 || sumOfDice == 11)
+            {
+                System.out.println("You rolled " + sumOfDice + "\nYou got a natural and Won");
             }
-            else if (input == 1) {
-                int curSum = roll1 + roll2;
-                System.out.println("Your first role was a : " + roll1);
-                System.out.println("Your second role was a : " + roll2);
-                System.out.println("The sum of them together is : " + curSum);
+            else if (sumOfDice == 2 || sumOfDice == 3 || sumOfDice == 12)
+            {
+                System.out.println("You rolled " + sumOfDice + "\nYou crapped out and Lost");
+            }
+            else
+            {
+                System.out.println("You rolled " + sumOfDice + "\nThis is now the point");
+                point = sumOfDice;
 
-                if (roll1 + roll2 == 2 || roll1 + roll2 == 3 || roll1 + roll2 == 12) {
-                    System.out.println("Craps! Game over buddy.");
-                    System.exit(0);
-                } else if (roll1 + roll2 == 7 || roll1 + roll2 == 11) {
-                    System.out.println("Natural! You win the game.");
-                    System.exit(0);
-                } else if (points == roll1 + roll2) {
-                    System.out.println("You made the point sum! You win!");
-                    System.exit(0);
+                do
+                {
+                    sumOfDice = crapsRoll();
+
+                    if (!(sumOfDice == point || sumOfDice == 7))
+                    {
+                        System.out.println("You rolled " + sumOfDice + " which is neither the point (" + point + ") nor 7 \nRolling again");
+                    }
                 }
-                else {
-                    points += roll1 + roll2;
-                    System.out.println("You currently have " + points + " points.");
+                while (!(sumOfDice == point || sumOfDice == 7));
+
+                if (sumOfDice == point)
+                {
+                    System.out.println("You rolled " + sumOfDice + " which is the point \nYou Won");
+                }
+                else
+                {
+                    System.out.println("You rolled 7 before you rolled the point \nYou Lost");
                 }
             }
 
-
-        } while (isRunning);
-
-
+            do
+            {
+                System.out.println("Would you like to play again? (Y/N)");
+                playAgain = in.nextLine();
+                if (playAgain.equalsIgnoreCase("Y") || playAgain.equalsIgnoreCase("N"))
+                {
+                    break;
+                }
+                else
+                {
+                    System.out.println("Please enter a valid response");
+                }
+            }
+            while (!(playAgain.equalsIgnoreCase("Y") || playAgain.equalsIgnoreCase("N")));
+        }
+        while (playAgain.equalsIgnoreCase("Y"));
     }
-
+    public static int crapsRoll()
+    {
+        Random rnd = new Random();
+        int die1 = rnd.nextInt(6) + 1;
+        int die2 = rnd.nextInt(6) + 1;
+        int score = die1 + die2;
+        return score;
+    }
 }
